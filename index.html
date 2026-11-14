@@ -29,7 +29,7 @@
       </div>
       <button class="intro-skip" type="button">Skip <span aria-hidden="true">→</span></button>
     </div>
-    <canvas class="code-canvas" id="ambient-canvas" aria-hidden="true"></canvas>
+    <div class="cursor-aurora" id="cursor-aurora" aria-hidden="true"></div>
     <header class="site-header" id="top">
       <nav class="navigation container" aria-label="Main navigation">
         <a class="brand" href="index.html">Zahra<span>.</span></a>
@@ -71,6 +71,25 @@
         <figure class="profile-photo" data-reveal>
           <img src="assets/images/profile.jpg" alt="Portrait of Zahra Zarbaliyeva">
         </figure>
+      </section>
+
+      <section class="quick-actions-section container" aria-labelledby="quick-actions-title">
+        <div class="quick-actions-card" data-reveal>
+          <div class="quick-actions-heading">
+            <div>
+              <p class="eyebrow">A little interactive corner</p>
+              <h2 id="quick-actions-title">Explore Zahra <span aria-hidden="true">•</span> Quick Actions</h2>
+            </div>
+            <p class="quick-actions-prompt">Choose a button to discover, celebrate, or add a little extra glow.</p>
+          </div>
+          <p class="quick-fact" id="quick-fact" aria-live="polite" aria-atomic="true">I earned 300/300 and ranked #1 nationally on the 2026 graduation exam.</p>
+          <div class="quick-action-list" role="group" aria-label="Portfolio quick actions">
+            <button class="quick-action-button" id="fun-fact-button" type="button">⚡ Fun Fact</button>
+            <button class="quick-action-button" id="confetti-button" type="button">🎉 300/300 Confetti</button>
+            <button class="quick-action-button" id="redecode-button" type="button">💻 Re-Decode Name</button>
+            <button class="quick-action-button" id="glow-mode-button" type="button" aria-pressed="false">✨ Glow Mode</button>
+          </div>
+        </div>
       </section>
 
       <section class="intro-section">

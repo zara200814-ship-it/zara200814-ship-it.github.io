@@ -10,6 +10,8 @@ A personal portfolio website created for **SITE 1101**. It shares Zahra’s acad
 - Persistent Light/Dark theme toggle
 - Academic and creative milestones
 - Project showcase
+- Cursor-following blue aurora effect across all pages
+- Home Quick Actions for personal facts, confetti, name re-decoding, and optional Bento glow
 
 ## Technologies
 

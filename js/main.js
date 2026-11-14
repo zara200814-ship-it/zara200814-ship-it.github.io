@@ -22,6 +22,19 @@ if (themeToggle) {
   });
 }
 
+const glowModeButton = document.querySelector("#glow-mode-button");
+const glowModeEnabled = localStorage.getItem("portfolio-glow-mode") === "true";
+document.documentElement.classList.toggle("glow-mode", glowModeEnabled);
+
+if (glowModeButton) {
+  glowModeButton.setAttribute("aria-pressed", String(glowModeEnabled));
+  glowModeButton.addEventListener("click", () => {
+    const isEnabled = document.documentElement.classList.toggle("glow-mode");
+    localStorage.setItem("portfolio-glow-mode", String(isEnabled));
+    glowModeButton.setAttribute("aria-pressed", String(isEnabled));
+  });
+}
+
 const menuToggle = document.querySelector(".menu-toggle");
 const primaryMenu = document.querySelector("#primary-menu");
 
@@ -198,150 +211,133 @@ if (scrambleName) {
 
   runAfterIntro(startScramble);
   scrambleName.addEventListener("mouseenter", startScramble);
+  document.querySelector("#redecode-button")?.addEventListener("click", startScramble);
 }
 
-const codeCanvas = document.querySelector("#ambient-canvas");
-const canvasContext = codeCanvas?.getContext("2d");
+const cursorAurora = document.querySelector("#cursor-aurora");
 
-if (codeCanvas && canvasContext) {
-  const codeFont = getComputedStyle(document.documentElement).getPropertyValue("--mono").trim() || "monospace";
-  const phi = (1 + Math.sqrt(5)) / 2;
-  const vertices = [
-    [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-    [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-    [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-  ];
-  const edges = [];
-  let shortestEdge = Infinity;
+if (cursorAurora) {
+  let cursorX = window.innerWidth / 2;
+  let cursorY = window.innerHeight / 2;
+  let targetX = cursorX;
+  let targetY = cursorY;
+  let trailX = cursorX;
+  let trailY = cursorY;
+  let animationFrame = 0;
+  let touchHideTimeout = 0;
 
-  for (let first = 0; first < vertices.length; first += 1) {
-    for (let second = first + 1; second < vertices.length; second += 1) {
-      const distance = Math.hypot(
-        vertices[first][0] - vertices[second][0],
-        vertices[first][1] - vertices[second][1],
-        vertices[first][2] - vertices[second][2]
-      );
-      shortestEdge = Math.min(shortestEdge, distance);
-      edges.push({ first, second, distance });
+  const renderAuroraPosition = () => {
+    cursorAurora.style.setProperty("--aurora-x", `${cursorX}px`);
+    cursorAurora.style.setProperty("--aurora-y", `${cursorY}px`);
+    cursorAurora.style.setProperty("--aurora-trail-x", `${trailX}px`);
+    cursorAurora.style.setProperty("--aurora-trail-y", `${trailY}px`);
+  };
+
+  const animateAurora = () => {
+    cursorX += (targetX - cursorX) * 0.14;
+    cursorY += (targetY - cursorY) * 0.14;
+    trailX += (cursorX - trailX) * 0.065;
+    trailY += (cursorY - trailY) * 0.065;
+    renderAuroraPosition();
+
+    const remainingDistance = Math.abs(targetX - cursorX) + Math.abs(targetY - cursorY)
+      + Math.abs(cursorX - trailX) + Math.abs(cursorY - trailY);
+    if (remainingDistance > 0.8) {
+      animationFrame = window.requestAnimationFrame(animateAurora);
+    } else {
+      cursorX = targetX;
+      cursorY = targetY;
+      trailX = targetX;
+      trailY = targetY;
+      renderAuroraPosition();
+      animationFrame = 0;
     }
-  }
-
-  const polyhedronEdges = edges.filter((edge) => Math.abs(edge.distance - shortestEdge) < 0.001);
-  const codeLabels = ["{ }", "</>", "0", "1"];
-  let canvasWidth = 0;
-  let canvasHeight = 0;
-  let lastFrameTime = performance.now();
-  let pointerX = 0;
-  let pointerY = 0;
-  let targetPointerX = 0;
-  let targetPointerY = 0;
-
-  const resizeCanvas = () => {
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-    canvasWidth = window.innerWidth;
-    canvasHeight = window.innerHeight;
-    codeCanvas.width = Math.round(canvasWidth * pixelRatio);
-    codeCanvas.height = Math.round(canvasHeight * pixelRatio);
-    canvasContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    targetPointerX = 0;
-    targetPointerY = 0;
   };
 
-  const drawCanvas = (currentTime) => {
-    const delta = Math.min((currentTime - lastFrameTime) / 1000, 0.05);
-    lastFrameTime = currentTime;
-    const isDark = document.documentElement.dataset.theme === "dark";
-    const blue = isDark ? "145, 176, 204" : "82, 114, 146";
-    pointerX += (targetPointerX - pointerX) * 0.025;
-    pointerY += (targetPointerY - pointerY) * 0.025;
+  const moveAuroraTo = (x, y) => {
+    targetX = x;
+    targetY = y;
+    cursorAurora.classList.add("is-active");
 
-    canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    const scale = Math.min(canvasWidth, canvasHeight) * 0.12;
-    const centerX = canvasWidth * (canvasWidth > 760 ? 0.72 : 0.56) + pointerX * 12;
-    const centerY = canvasHeight * 0.52 + pointerY * 10;
-    const rotationY = currentTime * 0.00016 + pointerX * 0.22;
-    const rotationX = 0.28 + Math.sin(currentTime * 0.00011) * 0.12 + pointerY * 0.16;
-    const cosineY = Math.cos(rotationY);
-    const sineY = Math.sin(rotationY);
-    const cosineX = Math.cos(rotationX);
-    const sineX = Math.sin(rotationX);
-    const projectedVertices = vertices.map(([x, y, z]) => {
-      const rotatedX = x * cosineY - z * sineY;
-      const rotatedZ = x * sineY + z * cosineY;
-      const tiltedY = y * cosineX - rotatedZ * sineX;
-      const tiltedZ = y * sineX + rotatedZ * cosineX;
-      const perspective = 4.2 / (4.2 - tiltedZ);
-
-      return {
-        x: centerX + rotatedX * scale * perspective,
-        y: centerY + tiltedY * scale * perspective,
-        depth: tiltedZ
-      };
-    });
-
-    polyhedronEdges.forEach(({ first, second }) => {
-      const start = projectedVertices[first];
-      const end = projectedVertices[second];
-      const depth = (start.depth + end.depth) / 2;
-      const alpha = 0.09 + Math.max(0, depth / 2) * 0.05;
-
-      canvasContext.beginPath();
-      canvasContext.moveTo(start.x, start.y);
-      canvasContext.lineTo(end.x, end.y);
-      canvasContext.strokeStyle = `rgba(${blue}, ${alpha})`;
-      canvasContext.lineWidth = 0.8;
-      canvasContext.stroke();
-    });
-
-    projectedVertices.forEach((point, index) => {
-      const radius = point.depth > 0 ? 2 : 1.4;
-      canvasContext.beginPath();
-      canvasContext.arc(point.x, point.y, radius, 0, Math.PI * 2);
-      canvasContext.fillStyle = `rgba(${blue}, ${point.depth > 0 ? 0.38 : 0.22})`;
-      canvasContext.shadowBlur = point.depth > 0 ? 8 : 4;
-      canvasContext.shadowColor = `rgba(${blue}, 0.42)`;
-      canvasContext.fill();
-
-      if (index % 3 === 0) {
-        canvasContext.font = `11px ${codeFont}`;
-        canvasContext.fillStyle = `rgba(${blue}, 0.2)`;
-        canvasContext.fillText(codeLabels[index / 3], point.x + 8, point.y - 7);
-      }
-    });
-    canvasContext.shadowBlur = 0;
-
-    if (!prefersReducedMotion) window.requestAnimationFrame(drawCanvas);
+    if (prefersReducedMotion) {
+      cursorX = x;
+      cursorY = y;
+      trailX = x;
+      trailY = y;
+      renderAuroraPosition();
+    } else if (!animationFrame) {
+      animationFrame = window.requestAnimationFrame(animateAurora);
+    }
   };
 
-  const updatePointerTarget = (event) => {
+  window.addEventListener("pointermove", (event) => {
     if (event.pointerType === "touch") return;
-    targetPointerX = event.clientX / Math.max(canvasWidth, 1) - 0.5;
-    targetPointerY = event.clientY / Math.max(canvasHeight, 1) - 0.5;
-  };
-
-  window.addEventListener("pointermove", updatePointerTarget, { passive: true });
-  window.addEventListener("pointerleave", () => {
-    targetPointerX = 0;
-    targetPointerY = 0;
-  });
-  window.addEventListener("resize", () => {
-    resizeCanvas();
-    if (prefersReducedMotion) drawCanvas(performance.now());
+    moveAuroraTo(event.clientX, event.clientY);
   }, { passive: true });
 
-  if (prefersReducedMotion) {
-    const themeObserver = new MutationObserver(() => drawCanvas(performance.now()));
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  }
+  window.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch") return;
+    moveAuroraTo(event.clientX, event.clientY);
+    window.clearTimeout(touchHideTimeout);
+    touchHideTimeout = window.setTimeout(() => cursorAurora.classList.remove("is-active"), 850);
+  }, { passive: true });
 
-  resizeCanvas();
+  window.addEventListener("pointerleave", () => cursorAurora.classList.remove("is-active"));
+}
 
-  if (prefersReducedMotion) {
-    drawCanvas(lastFrameTime);
-  } else {
-    window.requestAnimationFrame(drawCanvas);
-  }
+const funFactButton = document.querySelector("#fun-fact-button");
+const quickFactDisplay = document.querySelector("#quick-fact");
+
+if (funFactButton && quickFactDisplay) {
+  const facts = [
+    "I earned 300/300 and ranked #1 nationally on the 2026 graduation exam.",
+    "My curiosity about computers and technology began in 2020.",
+    "At ADA University, I’m building and testing logic gates in SITE 1101.",
+    "I freelance as a CapCut creator, making promotional content and custom invitations.",
+    "I’ve volunteered at Formula 1 in Baku."
+  ];
+  let factIndex = 0;
+
+  funFactButton.addEventListener("click", () => {
+    factIndex = (factIndex + 1) % facts.length;
+    quickFactDisplay.classList.remove("is-changing");
+    void quickFactDisplay.offsetWidth;
+    quickFactDisplay.textContent = facts[factIndex];
+    quickFactDisplay.classList.add("is-changing");
+  });
+}
+
+const confettiButton = document.querySelector("#confetti-button");
+
+if (confettiButton) {
+  const confettiColors = ["var(--accent)", "var(--highlight)", "#aeb8c5", "#d7dee7"];
+
+  confettiButton.addEventListener("click", () => {
+    const bounds = confettiButton.getBoundingClientRect();
+    const originX = bounds.left + bounds.width / 2;
+    const originY = bounds.top + bounds.height / 2;
+    const particleCount = prefersReducedMotion ? 18 : 42;
+    const particles = [];
+
+    for (let index = 0; index < particleCount; index += 1) {
+      const particle = document.createElement("span");
+      const isReducedMotion = prefersReducedMotion;
+      particle.className = "confetti-piece";
+      particle.setAttribute("aria-hidden", "true");
+      particle.style.setProperty("--confetti-x", `${isReducedMotion ? Math.random() * window.innerWidth : originX}px`);
+      particle.style.setProperty("--confetti-y", `${isReducedMotion ? Math.random() * window.innerHeight : originY}px`);
+      particle.style.setProperty("--confetti-size", `${4 + Math.random() * 5}px`);
+      particle.style.setProperty("--confetti-color", confettiColors[index % confettiColors.length]);
+      particle.style.setProperty("--confetti-dx", `${isReducedMotion ? 0 : (Math.random() - 0.5) * window.innerWidth * 0.9}px`);
+      particle.style.setProperty("--confetti-dy", `${isReducedMotion ? 0 : (Math.random() - 0.5) * window.innerHeight * 0.9}px`);
+      particle.style.setProperty("--confetti-spin", `${180 + Math.random() * 720}deg`);
+      particle.style.setProperty("--confetti-delay", `${Math.random() * 160}ms`);
+      document.body.append(particle);
+      particles.push(particle);
+    }
+
+    window.setTimeout(() => particles.forEach((particle) => particle.remove()), prefersReducedMotion ? 650 : 1800);
+  });
 }
 
 if (!prefersReducedMotion) {
@@ -412,7 +408,7 @@ if (typingRole && !prefersReducedMotion) {
   runAfterIntro(() => window.setTimeout(updateRole, 1800));
 }
 
-document.querySelectorAll(".intro-grid, .about-section, .project-card").forEach((card) => {
+document.querySelectorAll(".intro-grid, .about-section, .project-card, .quick-actions-card").forEach((card) => {
   card.addEventListener("pointermove", (event) => {
     if (event.pointerType === "touch") return;
 
