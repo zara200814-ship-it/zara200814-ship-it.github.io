@@ -221,6 +221,50 @@ html[data-theme="dark"] .theme-icon-moon {
   display: none;
 }
 
+.menu-icon,
+.menu-icon::before,
+.menu-icon::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.menu-icon {
+  position: relative;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  position: absolute;
+  left: 0;
+  content: "";
+  transition: top 180ms ease, transform 180ms ease;
+}
+
+.menu-icon::before {
+  top: -6px;
+}
+
+.menu-icon::after {
+  top: 6px;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon {
+  background: transparent;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
 .eyebrow {
   margin: 0 0 1.1rem;
   color: var(--accent);
@@ -819,6 +863,18 @@ html[data-theme="dark"] .project-placeholder {
 
   .footer-content {
     min-height: 78px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .profile-photo {
+    order: -1;
+    justify-self: center;
   }
 }
 
