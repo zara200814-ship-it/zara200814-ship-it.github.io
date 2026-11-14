@@ -86,7 +86,33 @@ if (siteHeader || backToTopButton) {
   updateHeader();
 }
 
-if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!prefersReducedMotion) {
+  document.querySelectorAll("[data-count-up]").forEach((element) => {
+    const target = Number(element.dataset.countUp);
+    const duration = 1000;
+    const startTime = performance.now();
+
+    element.textContent = "0";
+
+    const updateCount = (currentTime) => {
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      const easedProgress = 1 - (1 - progress) ** 3;
+      element.textContent = String(Math.round(target * easedProgress));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(updateCount);
+      } else {
+        element.textContent = String(target);
+      }
+    };
+
+    window.requestAnimationFrame(updateCount);
+  });
+}
+
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
   const revealTargets = document.querySelectorAll("[data-reveal]");
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
