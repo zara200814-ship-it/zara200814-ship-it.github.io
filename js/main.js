@@ -88,6 +88,67 @@ if (siteHeader || backToTopButton) {
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const introSplash = document.querySelector("#portfolio-intro");
+let introIsActive = Boolean(introSplash && !prefersReducedMotion);
+
+const runAfterIntro = (callback) => {
+  if (introIsActive) {
+    introSplash.addEventListener("introcomplete", callback, { once: true });
+  } else {
+    callback();
+  }
+};
+
+if (introSplash) {
+  const skipIntro = introSplash.querySelector(".intro-skip");
+  const pageLayers = [
+    document.querySelector(".site-header"),
+    document.querySelector("main"),
+    document.querySelector(".site-footer")
+  ].filter(Boolean);
+
+  if (prefersReducedMotion) {
+    introSplash.hidden = true;
+  } else {
+    document.documentElement.classList.add("intro-active");
+    pageLayers.forEach((layer) => {
+      layer.inert = true;
+    });
+
+    let introFinished = false;
+    const revealPage = (delay = 0) => {
+      if (introFinished) return;
+      introFinished = true;
+
+      window.setTimeout(() => {
+        introSplash.hidden = true;
+        pageLayers.forEach((layer) => {
+          layer.inert = false;
+        });
+        document.documentElement.classList.remove("intro-active");
+
+        if (document.activeElement === skipIntro) {
+          document.querySelector(".brand")?.focus({ preventScroll: true });
+        }
+
+        introIsActive = false;
+        introSplash.dispatchEvent(new Event("introcomplete"));
+      }, delay);
+    };
+
+    introSplash.addEventListener("animationend", (event) => {
+      if (event.target === introSplash && event.animationName === "splash-exit") {
+        revealPage();
+      }
+    });
+
+    skipIntro?.addEventListener("click", () => {
+      introSplash.classList.add("is-skipped");
+      revealPage(240);
+    });
+  }
+}
+
 const scrambleName = document.querySelector(".scramble-name");
 
 if (scrambleName) {
@@ -135,7 +196,7 @@ if (scrambleName) {
     scrambleFrame = window.requestAnimationFrame(updateScramble);
   };
 
-  startScramble();
+  runAfterIntro(startScramble);
   scrambleName.addEventListener("mouseenter", startScramble);
 }
 
@@ -284,26 +345,28 @@ if (codeCanvas && canvasContext) {
 }
 
 if (!prefersReducedMotion) {
-  document.querySelectorAll("[data-count-up]").forEach((element) => {
-    const target = Number(element.dataset.countUp);
-    const duration = 1000;
-    const startTime = performance.now();
+  runAfterIntro(() => {
+    document.querySelectorAll("[data-count-up]").forEach((element) => {
+      const target = Number(element.dataset.countUp);
+      const duration = 1000;
+      const startTime = performance.now();
 
-    element.textContent = "0";
+      element.textContent = "0";
 
-    const updateCount = (currentTime) => {
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      const easedProgress = 1 - (1 - progress) ** 3;
-      element.textContent = String(Math.round(target * easedProgress));
+      const updateCount = (currentTime) => {
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const easedProgress = 1 - (1 - progress) ** 3;
+        element.textContent = String(Math.round(target * easedProgress));
 
-      if (progress < 1) {
-        window.requestAnimationFrame(updateCount);
-      } else {
-        element.textContent = String(target);
-      }
-    };
+        if (progress < 1) {
+          window.requestAnimationFrame(updateCount);
+        } else {
+          element.textContent = String(target);
+        }
+      };
 
-    window.requestAnimationFrame(updateCount);
+      window.requestAnimationFrame(updateCount);
+    });
   });
 }
 
@@ -346,7 +409,7 @@ if (typingRole && !prefersReducedMotion) {
     window.setTimeout(updateRole, 42);
   };
 
-  window.setTimeout(updateRole, 1800);
+  runAfterIntro(() => window.setTimeout(updateRole, 1800));
 }
 
 document.querySelectorAll(".intro-grid, .about-section, .project-card").forEach((card) => {
