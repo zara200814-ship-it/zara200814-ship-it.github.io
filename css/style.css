@@ -647,10 +647,47 @@ html[data-theme="dark"] .project-placeholder {
   letter-spacing: -0.04em;
 }
 
-.project-card-content > p:last-child {
+.project-card-content > p:last-of-type {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.75;
+}
+
+.project-video-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.project-video-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 8px 18px var(--glow);
+  color: var(--accent-foreground);
+}
+
+.play-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: currentColor;
+  transition: transform 180ms ease;
+}
+
+.project-video-link:hover .play-icon {
+  transform: translateX(2px);
 }
 
 .sr-only {
