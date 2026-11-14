@@ -112,6 +112,63 @@ if (!prefersReducedMotion) {
   });
 }
 
+const typingRole = document.querySelector(".typing-role");
+
+if (typingRole && !prefersReducedMotion) {
+  const roles = [
+    "Computer Engineering Student at ADA University",
+    "300/300 National Graduation Exam Top Scorer",
+    "Freelance CapCut Content & Invitation Creator",
+    "Formula 1 Baku Volunteer"
+  ];
+  let roleIndex = 0;
+  let characterIndex = roles[0].length;
+  let isDeleting = true;
+
+  const updateRole = () => {
+    const role = roles[roleIndex];
+
+    if (isDeleting) {
+      characterIndex -= 1;
+      typingRole.textContent = role.slice(0, characterIndex);
+      if (characterIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        window.setTimeout(updateRole, 260);
+        return;
+      }
+      window.setTimeout(updateRole, 24);
+      return;
+    }
+
+    characterIndex += 1;
+    typingRole.textContent = roles[roleIndex].slice(0, characterIndex);
+    if (characterIndex === roles[roleIndex].length) {
+      isDeleting = true;
+      window.setTimeout(updateRole, 1450);
+      return;
+    }
+    window.setTimeout(updateRole, 42);
+  };
+
+  window.setTimeout(updateRole, 1800);
+}
+
+document.querySelectorAll(".intro-grid, .about-section, .project-card").forEach((card) => {
+  card.addEventListener("pointermove", (event) => {
+    if (event.pointerType === "touch") return;
+
+    const bounds = card.getBoundingClientRect();
+    card.style.setProperty("--spotlight-x", `${event.clientX - bounds.left}px`);
+    card.style.setProperty("--spotlight-y", `${event.clientY - bounds.top}px`);
+    card.classList.add("spotlight-active");
+  }, { passive: true });
+
+  card.addEventListener("pointerleave", () => {
+    card.classList.remove("spotlight-active");
+  });
+});
+
 if (!prefersReducedMotion && "IntersectionObserver" in window) {
   const revealTargets = document.querySelectorAll("[data-reveal]");
   const revealObserver = new IntersectionObserver((entries, observer) => {
