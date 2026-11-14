@@ -19,6 +19,7 @@ html[data-theme="light"] {
   --glow: rgb(82 114 146 / 22%);
   --serif: "Manrope", "Avenir Next", sans-serif;
   --sans: "DM Sans", "Avenir Next", sans-serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 html[data-theme="dark"] {
@@ -94,6 +95,17 @@ body::after {
 body > * {
   position: relative;
   z-index: 1;
+}
+
+.code-canvas {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.32;
+  pointer-events: none;
 }
 
 html[data-theme="dark"] body {
@@ -344,6 +356,20 @@ h2 {
   background: linear-gradient(105deg, var(--accent) 5%, var(--highlight) 100%);
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.scramble-name {
+  transition: letter-spacing 180ms ease, text-shadow 180ms ease;
+}
+
+.scramble-name.is-scrambling {
+  background: none;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.88em;
+  letter-spacing: -0.08em;
+  text-shadow: 0 0 14px var(--glow);
+  -webkit-text-fill-color: var(--accent);
 }
 
 .hero-subtitle {
