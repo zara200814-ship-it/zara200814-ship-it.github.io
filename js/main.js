@@ -50,12 +50,29 @@ if (menuToggle && primaryMenu) {
 }
 
 const siteHeader = document.querySelector(".site-header");
+const backToTopButton = document.querySelector(".back-to-top");
 
-if (siteHeader) {
+if (backToTopButton) {
+  backToTopButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
+}
+
+if (siteHeader || backToTopButton) {
   let scrollUpdateScheduled = false;
 
   const updateHeader = () => {
-    siteHeader.classList.toggle("is-scrolled", window.scrollY > 8);
+    const isScrolled = window.scrollY > 8;
+    const showBackToTop = window.scrollY > 320;
+
+    if (siteHeader) siteHeader.classList.toggle("is-scrolled", isScrolled);
+    if (backToTopButton) {
+      backToTopButton.classList.toggle("is-visible", showBackToTop);
+      backToTopButton.setAttribute("aria-hidden", String(!showBackToTop));
+      backToTopButton.tabIndex = showBackToTop ? 0 : -1;
+    }
+
     scrollUpdateScheduled = false;
   };
 

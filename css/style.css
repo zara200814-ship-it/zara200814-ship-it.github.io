@@ -15,7 +15,7 @@ html[data-theme="light"] {
   --highlight: #91b0cc;
   --line: #c5d6e5;
   --shadow: 0 14px 40px rgb(43 71 100 / 7%);
-  --shadow-hover: 0 22px 48px rgb(43 71 100 / 13%);
+  --shadow-hover: 0 22px 48px rgb(43 71 100 / 13%), 0 0 26px var(--glow);
   --glow: rgb(82 114 146 / 22%);
   --serif: "Manrope", "Avenir Next", sans-serif;
   --sans: "DM Sans", "Avenir Next", sans-serif;
@@ -35,7 +35,7 @@ html[data-theme="dark"] {
   --highlight: #bcd3e6;
   --line: #375675;
   --shadow: 0 14px 40px rgb(0 0 0 / 18%);
-  --shadow-hover: 0 22px 48px rgb(0 0 0 / 30%);
+  --shadow-hover: 0 22px 48px rgb(0 0 0 / 30%), 0 0 26px var(--glow);
   --glow: rgb(145 176 204 / 24%);
 }
 
@@ -44,7 +44,6 @@ html[data-theme="dark"] {
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 100px;
 }
 
@@ -522,6 +521,52 @@ h2 {
   transform: translate(2px, -2px);
 }
 
+.back-to-top {
+  position: fixed;
+  z-index: 18;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  text-decoration: none;
+  transform: translateY(12px);
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, color 200ms ease, opacity 200ms ease, transform 200ms ease, visibility 200ms ease;
+  visibility: hidden;
+}
+
+.back-to-top svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.back-to-top.is-visible:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 12px 28px var(--glow);
+  color: var(--accent-foreground);
+  transform: translateY(-3px);
+}
+
 .page-main {
   flex: 1;
   padding-block: clamp(4.5rem, 9vw, 7rem);
@@ -863,6 +908,11 @@ html[data-theme="dark"] .project-placeholder {
 
   .footer-content {
     min-height: 78px;
+  }
+
+  .back-to-top {
+    right: 1rem;
+    bottom: 1rem;
   }
 }
 

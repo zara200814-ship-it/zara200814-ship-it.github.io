@@ -1,18 +1,19 @@
-# SITE 1101 Project 4: Personal Portfolio
+# Zahra Zarbaliyeva — Personal Portfolio
 
-Personal portfolio website for **Zahra Zarbaliyeva**, created for SITE 1101 Project 4. The site introduces Zahra, shares her background as a Computer Engineering student at ADA University, and showcases projects from her coursework.
+A personal portfolio website created for **SITE 1101**. It shares Zahra’s academic and creative milestones and presents selected projects in a responsive Bento Grid layout.
 
-**Live website:** [https://zara200814-ship-it.github.io](https://zara200814-ship-it.github.io)
+**Live website:** [zara200814-ship-it.github.io](https://zara200814-ship-it.github.io)
 
-## Pages
+## Features
 
-- **Home** (`index.html`) — Introduction and profile.
-- **About** (`about.html`) — Education, coursework, and skills.
-- **Projects** (`projects.html`) — Selected SITE 1101 projects.
+- Responsive Bento Grid layout
+- Persistent Light/Dark theme toggle
+- Academic and creative milestones
+- Project showcase
 
 ## Technologies
 
 - HTML5
 - CSS3
-- JavaScript
-- Git and GitHub
+- Vanilla JavaScript
+- GitHub Pages
