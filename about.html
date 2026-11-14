@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,15 +12,26 @@
     <header class="site-header">
       <nav class="navigation container" aria-label="Main navigation">
         <a class="brand" href="index.html">Zahra<span>.</span></a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="menu-icon" aria-hidden="true"></span>
-        </button>
         <ul class="nav-links" id="primary-menu">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html" aria-current="page">About</a></li>
           <li><a href="projects.html">Projects</a></li>
         </ul>
+        <div class="nav-controls">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path>
+            </svg>
+          </button>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="menu-icon" aria-hidden="true"></span>
+          </button>
+        </div>
       </nav>
     </header>
 
@@ -30,27 +41,28 @@
       <div class="page-copy">
         <p>Hello, I’m Zahra Zarbaliyeva, a first-year Computer Engineering student at ADA University in Baku, Azerbaijan. I’m interested in how computing works, from digital logic to the web experiences people use every day.</p>
 
-        <section class="about-section" aria-labelledby="education-heading">
+        <section class="about-section" aria-labelledby="education-heading" data-reveal>
           <h2 id="education-heading">Education</h2>
           <p>I’m studying Computer Engineering at ADA University. My coursework is helping me build a foundation in information systems and the technical ideas behind computing.</p>
         </section>
 
-        <section class="about-section" aria-labelledby="coursework-heading">
+        <section class="about-section" aria-labelledby="coursework-heading" data-reveal>
           <h2 id="coursework-heading">Coursework</h2>
           <ul class="detail-list">
             <li>Principles of Information Systems (SITE 1101)</li>
           </ul>
         </section>
 
-        <section class="about-section" aria-labelledby="skills-heading">
+        <section class="about-section" aria-labelledby="skills-heading" data-reveal>
           <h2 id="skills-heading">Skills</h2>
           <p>I’m building practical skills through coursework and hands-on projects, including:</p>
           <ul class="skill-list">
             <li>HTML</li>
             <li>CSS</li>
             <li>JavaScript</li>
-            <li>Git/GitHub</li>
-            <li>Digital logic circuits on breadboard</li>
+            <li>Git</li>
+            <li>Breadboard Logic</li>
+            <li>CapCut</li>
           </ul>
         </section>
 

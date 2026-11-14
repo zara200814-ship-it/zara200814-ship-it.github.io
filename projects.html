@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,15 +12,26 @@
     <header class="site-header">
       <nav class="navigation container" aria-label="Main navigation">
         <a class="brand" href="index.html">Zahra<span>.</span></a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="menu-icon" aria-hidden="true"></span>
-        </button>
         <ul class="nav-links" id="primary-menu">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="projects.html" aria-current="page">Projects</a></li>
         </ul>
+        <div class="nav-controls">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path>
+            </svg>
+          </button>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="menu-icon" aria-hidden="true"></span>
+          </button>
+        </div>
       </nav>
     </header>
 
@@ -29,7 +40,7 @@
       <h1>Projects<span>.</span></h1>
       <p class="projects-intro">A few hands-on projects from my first year, where I’ve been learning by building, experimenting, and sharing what I discover.</p>
       <div class="project-grid">
-        <article class="project-card">
+        <article class="project-card" data-reveal>
           <img class="project-image" src="assets/images/project1.jpg" alt="Zahra working with a breadboard circuit">
           <div class="project-card-content">
             <p class="project-course">Project 1 · SITE 1101</p>
@@ -38,7 +49,7 @@
           </div>
         </article>
 
-        <article class="project-card">
+        <article class="project-card" data-reveal>
           <div class="project-placeholder">Photo Coming Soon</div>
           <div class="project-card-content">
             <p class="project-course">Project 2 · SITE 1101</p>
@@ -47,7 +58,7 @@
           </div>
         </article>
 
-        <article class="project-card">
+        <article class="project-card" data-reveal>
           <div class="project-placeholder">Photo Coming Soon</div>
           <div class="project-card-content">
             <p class="project-course">Project 3 · SITE 1101</p>

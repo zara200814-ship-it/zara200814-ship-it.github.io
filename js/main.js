@@ -1,6 +1,29 @@
+const themeToggle = document.querySelector(".theme-toggle");
+const storedTheme = localStorage.getItem("portfolio-theme");
+const initialTheme = storedTheme === "dark" ? "dark" : "light";
+
+document.documentElement.dataset.theme = initialTheme;
+
+const updateThemeToggle = (theme) => {
+  const isDark = theme === "dark";
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
+  themeToggle.setAttribute("title", `Switch to ${isDark ? "light" : "dark"} mode`);
+};
+
+if (themeToggle) {
+  updateThemeToggle(initialTheme);
+
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    localStorage.setItem("portfolio-theme", nextTheme);
+    updateThemeToggle(nextTheme);
+  });
+}
+
 const menuToggle = document.querySelector(".menu-toggle");
 const primaryMenu = document.querySelector("#primary-menu");
-const siteHeader = document.querySelector(".site-header");
 
 if (menuToggle && primaryMenu) {
   const closeMenu = () => {
@@ -26,6 +49,8 @@ if (menuToggle && primaryMenu) {
   });
 }
 
+const siteHeader = document.querySelector(".site-header");
+
 if (siteHeader) {
   let scrollUpdateScheduled = false;
 
@@ -45,9 +70,7 @@ if (siteHeader) {
 }
 
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
-  const revealTargets = document.querySelectorAll(
-    "main > section, .hero-content, .profile-photo, .intro-grid, .page-main > .eyebrow, .page-main > h1, .about-section, .projects-intro, .project-card"
-  );
+  const revealTargets = document.querySelectorAll("[data-reveal]");
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
